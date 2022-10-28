@@ -11,7 +11,7 @@ sprig: http://masterminds.github.io/sprig/
 download:
 
 ```bash
-curl https://github.com/zzjcool/fast-template/releases/download/v0.0.1/ft -o ft
+curl https://github.com/zzjcool/fast-template/releases/download/latest/ft -LJo ft
 chmod +x ft
 ```
 
