@@ -1,0 +1,22 @@
+# Template Example
+
+## value
+
+{{ range $key, $value := . }}
+{{ $key }}: {{ $value }}
+{{- end }}
+
+## Example files
+
+{{- range $key, $value := .files }}
+{{  $key }} . {{ $value }}
+{{- end }}
+
+
+## About
+
+|  {{ .name }}  | info |
+| --- | --- |
+{{- range $key, $value := .about }}
+| {{  $key }} | {{ $value }} |
+{{- end }}

@@ -1,0 +1,6 @@
+name: example
+files: ["README.md","README.output.md","value.yaml"]
+about:
+    author: zzjcool
+    email: email@zzj.cool
+    github: github.com/zzjcool
