@@ -1,41 +1,36 @@
 package render
 
 import (
+	"bytes"
 	"os"
 	"path/filepath"
 	"text/template"
 
 	"github.com/Masterminds/sprig/v3"
 
-	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v2"
 )
 
-func main2() {
-	
-	valueFilename:="example/value.yaml"
-	templateFilename:="example/README.template"
-	outputFilename:="example/README.md"
+// Str 使用字符串进行输入输出
+func Str(config, tpl string) (string,error) {
 
-	// flag.StringVar(&valueFilename,"value","example/value.yaml","value file in yaml format")
-	rootCmd:=&cobra.Command{
-		Use:   "ft",
-		Short: "Fast rendering with parameters and templates",
-		Long: `Fast template is a tool for template rendering`,
+	t := template.New("template").Funcs(sprig.TxtFuncMap())
+	t,err := t.Parse(tpl)
+	if err!=nil{
+		return "",err
 	}
-	rootCmd.PersistentFlags().StringVarP(&valueFilename, "value", "v", "example/value.yaml", "value file")
+	conf := new(map[string]any)
+	//yaml文件内容影射到结构体中
+	err = yaml.Unmarshal([]byte(config), conf)
+	if err!=nil{
+		return "",err
+	}
 
-	// rootCmd.SetHelpCommand(&cobra.Command{
-	// 	Use:   "ft",
-	// 	Short: "Fast rendering with parameters and templates",
-	// 	Long: `Fast template is a tool for template rendering`,
-	// })
-	rootCmd.Execute()
-	
-
-
-
-	BuildTemplate[Config](valueFilename, templateFilename, outputFilename)
+	buf := new(bytes.Buffer)
+	if err = t.Execute(buf, conf);err!=nil{
+		return "",err
+	}
+	return buf.String(),nil
 }
 
 func BuildTemplate[T any](configFile, templateFile, outputFile string) {
