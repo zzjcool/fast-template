@@ -11,19 +11,26 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-// Render 使用字符串进行输入输出
-func Render(config, tpl string) string {
+// Str 使用字符串进行输入输出
+func Str(config, tpl string) (string,error) {
 
-	t := template.New("test").Funcs(sprig.TxtFuncMap())
-	t = template.Must(t.Parse(
-		`hello {{.UserName}}!`))
-	p := map[string]any{
-		"UserName": "ddd",
+	t := template.New("template").Funcs(sprig.TxtFuncMap())
+	t,err := t.Parse(tpl)
+	if err!=nil{
+		return "",err
+	}
+	conf := new(map[string]any)
+	//yaml文件内容影射到结构体中
+	err = yaml.Unmarshal([]byte(config), conf)
+	if err!=nil{
+		return "",err
 	}
 
 	buf := new(bytes.Buffer)
-	t.Execute(buf, p)
-	return buf.String()
+	if err = t.Execute(buf, conf);err!=nil{
+		return "",err
+	}
+	return buf.String(),nil
 }
 
 func BuildTemplate[T any](configFile, templateFile, outputFile string) {
